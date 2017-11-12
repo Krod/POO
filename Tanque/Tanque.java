@@ -5,21 +5,22 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Tanque {
+public class Tanque implements Serializable{
 	protected double x,y;
-	protected double aux_x,aux_y;
+	protected transient double aux_x,aux_y;
 	private double angulo;
 	private double velocidade;
 	private Color cor;
 	private boolean estaAtivo;
 	protected int pontosVida;
 	
-	Random random;
-	ArrayList<Disparo> disparos = new ArrayList<>();
-	Disparo removerDisparo;
+	private transient Random random;
+	private ArrayList<Disparo> disparos = new ArrayList<>();
+	private transient Disparo removerDisparo;
 	
 	public Tanque(int x, int y, int a, Color cor){
 		this.x = x;
@@ -73,7 +74,7 @@ public class Tanque {
 					velocidade *= -1;
 				}
 			}
-			if (y>=450){
+			if (y>=Arena.altura - 30){
 				if(angulo > 90 && angulo < 180) angulo = 360 - angulo - 180;
 				if(angulo >= 180 && angulo < 270) angulo = 360 - angulo + 180;
 				if(velocidade < 0){
@@ -82,7 +83,7 @@ public class Tanque {
 				}
 				
 			}
-			if (x>=610){
+			if (x>=Arena.largura - 30){
 				if(angulo > 0 && angulo <= 90) angulo= 360 - angulo;
 				if(angulo >= 90 && angulo < 180) angulo= 360 - angulo;
 				if(velocidade < 0){

@@ -14,6 +14,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -28,8 +29,10 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 	private Timer contador;
 	private int mouseX;
 	private Tanque tanqueAtivo;
+    private static Cliente cliente;
+    private static Servidor servidor;
 	
-	public Arena(int l,int a){
+	public Arena(int l,int a) throws IOException{
 		largura = l; 
 		altura = a;
 		tanques = new HashSet<Tanque>();
@@ -78,6 +81,9 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 				if(t.pontosVida == 0)
 					tanquesRemover.add(t);
 			}
+			if(tanqueAtivo != null)
+				cliente.setTanque(tanqueAtivo);
+
 			t.draw(g2d);
 		}
 		
@@ -170,9 +176,24 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 		}
 	}
 	
-	public static void main(String args[]){
+	public static void main(String args[]) throws IOException{
 		Arena arena = new Arena(800,600);
 	    Random random = new Random();
+	    
+	    if(args.length > 0) {
+	    	String s = args[0];
+		    if(s.equals("cliente")) {
+		    	System.out.println("Iniciando cliente");
+		    	cliente = new Cliente("127.0.0.1", 1234, "Rodrigo");
+		    	cliente.start();
+		    }
+		    else if(s.equals("servidor")) {
+		    	System.out.println("Iniciando servidor");
+		    	servidor = new Servidor(1234);
+		    	servidor.start();
+		    }
+	    }
+	    
 		arena.adicionaTanque(new Tanque(100,200,random.nextInt(360),Color.BLUE));
 		arena.adicionaTanque(new Tanque(200,200,random.nextInt(360),Color.RED));
 		arena.adicionaTanque(new Tanque(470,360,random.nextInt(360),Color.GREEN));

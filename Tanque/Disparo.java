@@ -1,8 +1,9 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.io.Serializable;
 
-public class Disparo {
+public class Disparo implements Serializable{
 	private double x;
 	private double y;
 	private double angulo;
