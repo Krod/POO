@@ -14,6 +14,7 @@ public class Servidor extends Thread {
 	@Override
 	public void run() {
 		System.out.println("Executando " + getName());
+			
 		try {
 			Jogador j = new Jogador(socketServidor.accept());
 			jogadores.add(j);

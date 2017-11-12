@@ -4,6 +4,7 @@ import java.awt.geom.AffineTransform;
 import java.io.Serializable;
 
 public class Disparo implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private double x;
 	private double y;
 	private double angulo;
@@ -17,8 +18,10 @@ public class Disparo implements Serializable{
 	}
 	
 	public void mover(){
-		x = x + Math.sin(Math.toRadians(angulo)) * velocidade;
-		y = y - Math.cos(Math.toRadians(angulo)) * velocidade;
+		x += Math.sin(Math.toRadians(angulo)) * velocidade;
+		y -= Math.cos(Math.toRadians(angulo)) * velocidade;
+		x = (double)Math.round(x * 1000d) / 1000d;
+		y = (double)Math.round(y * 1000d) / 1000d;
 	}
 	
 	public boolean remover() {

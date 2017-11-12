@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Tanque implements Serializable{
+	private static final long serialVersionUID = 1L;
 	protected double x,y;
 	protected transient double aux_x,aux_y;
-	private double angulo;
-	private double velocidade;
+	protected double angulo;
+	protected double velocidade;
 	private Color cor;
 	private boolean estaAtivo;
 	protected int pontosVida;
@@ -90,8 +91,10 @@ public class Tanque implements Serializable{
 					velocidade *= -1;
 				}
 			}
-			x = x + Math.sin(Math.toRadians(angulo)) * velocidade;
-			y = y - Math.cos(Math.toRadians(angulo)) * velocidade;
+			x += Math.sin(Math.toRadians(angulo)) * velocidade;
+			y -= Math.cos(Math.toRadians(angulo)) * velocidade;
+			x = (double)Math.round(x * 1000d) / 1000d;
+			y = (double)Math.round(y * 1000d) / 1000d;
 		}
 	}
 	public void setEstaAtivo(boolean estaAtivo){
@@ -169,8 +172,8 @@ public class Tanque implements Serializable{
 			int l = 10;
 			g2d.drawString("Angulo: " + (int)angulo + "", 25, l+=15);
 			g2d.drawString("Velocidade: " + String.format("%.1f", velocidade), 25, l+=15);
-			g2d.drawString("Posição X: " + String.format("%.2f", x), 25, l+=15);
-			g2d.drawString("Posição Y: " + String.format("%.2f", y), 25, l+=15);
+			g2d.drawString("Posição X: " + String.format("%f", x), 25, l+=15);
+			g2d.drawString("Posição Y: " + String.format("%f", y), 25, l+=15);
 			g2d.drawString("Disparos: " + disparos.size() + "/3", 25, l+=15);
 			g2d.drawString("Pontos de Vida: " + pontosVida, 25, l+=15);
 		}

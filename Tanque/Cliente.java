@@ -1,36 +1,36 @@
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Hashtable;
 
 public class Cliente extends Thread {
 	private Socket socketCliente;
 	private String nomeJogador;
-	private Tanque t;
+	private double x, y;
 	
 	public Cliente(String ip, int porta, String nomeJogador) throws IOException {
 		socketCliente = new Socket(ip, porta); 
 		this.nomeJogador = nomeJogador;
 	}
 	
-	public void setTanque(Tanque t) {
-		this.t = t;
-	}
-	
 	@Override
 	public void run() {
 		try {
-			//PrintWriter escritor = new PrintWriter(socketCliente.getOutputStream());
-			//System.out.println("Enviando...");
-			//escritor.write(nomeJogador);
-			//escritor.close();
+			OutputStreamWriter ouw = new OutputStreamWriter(socketCliente.getOutputStream());
+			BufferedWriter bfw = new BufferedWriter(ouw);
 			
 			while(true) {
-				ObjectOutputStream oos = new ObjectOutputStream(socketCliente.getOutputStream());
-				oos.writeObject(t);
+				if(Arena.tanqueAtivo != null) {
+					if(Arena.tanqueAtivo.x != x || Arena.tanqueAtivo.y != y) {
+						System.out.println("Enviando...");
+						bfw.write(String.format("%.3f|%.3f|%.3f", Arena.tanqueAtivo.x, Arena.tanqueAtivo.y, Arena.tanqueAtivo.angulo));
+						bfw.flush();
+						x = Arena.tanqueAtivo.x;
+						y = Arena.tanqueAtivo.y;
+					}
+				}
 			}
-			//oos.close();
 			
 			
 		} catch (IOException e) {

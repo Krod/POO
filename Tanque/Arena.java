@@ -25,12 +25,13 @@ import javax.swing.Timer;
 @SuppressWarnings("serial")
 public class Arena extends JComponent implements MouseListener, ActionListener, MouseMotionListener, KeyListener, MouseWheelListener, ComponentListener{
 	protected static int largura,altura;
-	private HashSet<Tanque> tanques, tanquesRemover;
+	protected static HashSet<Tanque> tanques, tanquesRemover;
 	private Timer contador;
 	private int mouseX;
-	private Tanque tanqueAtivo;
+	protected static Tanque tanqueAtivo;
     private static Cliente cliente;
     private static Servidor servidor;
+    private static String comando;
 	
 	public Arena(int l,int a) throws IOException{
 		largura = l; 
@@ -81,8 +82,6 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 				if(t.pontosVida == 0)
 					tanquesRemover.add(t);
 			}
-			if(tanqueAtivo != null)
-				cliente.setTanque(tanqueAtivo);
 
 			t.draw(g2d);
 		}
@@ -181,13 +180,13 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 	    Random random = new Random();
 	    
 	    if(args.length > 0) {
-	    	String s = args[0];
-		    if(s.equals("cliente")) {
+	    	comando = args[0];
+		    if(comando.equals("cliente")) {
 		    	System.out.println("Iniciando cliente");
 		    	cliente = new Cliente("127.0.0.1", 1234, "Rodrigo");
 		    	cliente.start();
 		    }
-		    else if(s.equals("servidor")) {
+		    else if(comando.equals("servidor")) {
 		    	System.out.println("Iniciando servidor");
 		    	servidor = new Servidor(1234);
 		    	servidor.start();
