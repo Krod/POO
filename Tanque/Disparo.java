@@ -3,11 +3,10 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.io.Serializable;
 
-public class Disparo implements Serializable{
-	private static final long serialVersionUID = 1L;
-	private double x;
-	private double y;
-	private double angulo;
+public class Disparo {
+	protected double x;
+	protected double y;
+	protected double angulo;
 	private double velocidade;
 	
 	public Disparo(double x, double y, double angulo) {

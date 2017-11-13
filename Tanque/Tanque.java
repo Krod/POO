@@ -9,19 +9,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Tanque implements Serializable{
-	private static final long serialVersionUID = 1L;
+public class Tanque {
 	protected double x,y;
-	protected transient double aux_x,aux_y;
+	protected double aux_x,aux_y;
 	protected double angulo;
 	protected double velocidade;
 	protected Color cor;
 	private boolean estaAtivo;
 	protected int pontosVida;
+	protected int pontosDisparos;
 	
-	private transient Random random;
-	private ArrayList<Disparo> disparos = new ArrayList<>();
-	private transient Disparo removerDisparo;
+	private Random random;
+	protected  Disparo[] disparos;
+	private Disparo removerDisparo;
 	
 	public Tanque(int x, int y, int a, Color cor){
 		this.x = x;
@@ -32,6 +32,8 @@ public class Tanque implements Serializable{
 		this.estaAtivo = false;
 		random = new Random();
 		pontosVida = 3;
+		disparos = new Disparo[3];
+		pontosDisparos = 3;
 	}
 	public void aumentarVelocidade(){
 		if(velocidade < 2)
@@ -113,13 +115,16 @@ public class Tanque implements Serializable{
 		depois.translate(x, y);
 		depois.rotate(Math.toRadians(angulo));
 		
-		for(Disparo disparo: disparos) {
-			disparo.mover();
-			disparo.draw(g2d);
-			if(disparo.remover())
-				removerDisparo = disparo;
-		}
-		disparos.remove(removerDisparo);
+		for(int i = 0; i < 3; i++)
+			if(disparos[i] != null) {
+				disparos[i].mover();
+				disparos[i].draw(g2d);
+				if(disparos[i].remover()) {
+					disparos[i] = null;
+					pontosDisparos++;
+				}
+			}
+		//disparos.remove(removerDisparo);
 		
 		//Aplicamos o sistema de coordenadas.
 		g2d.transform(depois);
@@ -174,7 +179,7 @@ public class Tanque implements Serializable{
 			g2d.drawString("Velocidade: " + String.format("%.1f", velocidade), 25, l+=15);
 			g2d.drawString("Posição X: " + String.format("%f", x), 25, l+=15);
 			g2d.drawString("Posição Y: " + String.format("%f", y), 25, l+=15);
-			g2d.drawString("Disparos: " + disparos.size() + "/3", 25, l+=15);
+			g2d.drawString("Disparos: " + pontosDisparos + "/3", 25, l+=15);
 			g2d.drawString("Pontos de Vida: " + pontosVida, 25, l+=15);
 		}
 		
@@ -188,7 +193,7 @@ public class Tanque implements Serializable{
 		g2d.drawRect((int)x + 30, (int)y + 8, 6, 18);
 		
 		// Desenha a barra de disparos
-		for(int i = 0; i < (3 - disparos.size()) * 5; i += 6){
+		for(int i = 0; i < pontosDisparos * 5; i += 6){
 			g2d.setColor(Color.BLUE);
 			g2d.fillRect((int)x + 38, (int)y + 20 - i, 6, 6);
 		}
@@ -205,15 +210,24 @@ public class Tanque implements Serializable{
 	}
 	
 	public void disparar() {
-		if(disparos.size() < 3)
-			disparos.add(new Disparo(x, y, angulo));
+		if(pontosDisparos > 0) {
+			for(int i = 0; i < 3; i++)
+				if(disparos[i] == null) {
+					disparos[i] = new Disparo(x, y, angulo);
+					pontosDisparos--;
+					break;
+				}
+		}
 	}
 	
 	public boolean acertou(Tanque inimigo) {
-		for(Disparo disparo: disparos)
-			if(disparo.acertou(inimigo.x, inimigo.y)) {
-				disparos.remove(disparo);
-				return true;
+		for(int i = 0; i < 3; i++)
+			if(disparos[i] != null) {
+				if(disparos[i].acertou(inimigo.x, inimigo.y)) {
+					disparos[i] = null;
+					pontosDisparos++;
+					return true;
+				}
 			}
 		return false;
 	}

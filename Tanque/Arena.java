@@ -82,6 +82,10 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 				if(t.pontosVida == 0)
 					tanquesRemover.add(t);
 			}
+			
+			for(Tanque q: tanques)
+				if(q != t && q.acertou(t))
+					tanquesRemover.add(t);
 
 			t.draw(g2d);
 		}
