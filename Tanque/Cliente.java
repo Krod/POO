@@ -19,12 +19,14 @@ public class Cliente extends Thread {
 		try {
 			OutputStreamWriter ouw = new OutputStreamWriter(socketCliente.getOutputStream());
 			BufferedWriter bfw = new BufferedWriter(ouw);
+			bfw.write("Teste");
 			
 			while(true) {
+				
 				if(Arena.tanqueAtivo != null) {
+					//System.out.println("Enviando...");
 					if(Arena.tanqueAtivo.x != x || Arena.tanqueAtivo.y != y) {
-						System.out.println("Enviando...");
-						bfw.write(String.format("%.3f|%.3f|%.3f", Arena.tanqueAtivo.x, Arena.tanqueAtivo.y, Arena.tanqueAtivo.angulo));
+						bfw.write(String.format("%.3f|%.3f|%d|%.1f|%s\n", Arena.tanqueAtivo.x, Arena.tanqueAtivo.y, (int)Arena.tanqueAtivo.angulo, Arena.tanqueAtivo.velocidade, Arena.tanqueAtivo.cor.getRGB()));
 						bfw.flush();
 						x = Arena.tanqueAtivo.x;
 						y = Arena.tanqueAtivo.y;

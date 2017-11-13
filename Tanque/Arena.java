@@ -28,7 +28,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 	protected static HashSet<Tanque> tanques, tanquesRemover;
 	private Timer contador;
 	private int mouseX;
-	protected static Tanque tanqueAtivo;
+	protected volatile static Tanque tanqueAtivo;
     private static Cliente cliente;
     private static Servidor servidor;
     private static String comando;

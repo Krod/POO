@@ -18,9 +18,10 @@ public class Jogador extends Thread{
 			BufferedReader reader = new BufferedReader(streamReader);
 			
 			while(true) {
-				System.out.println("Recebendo...");
-				System.out.println(reader.readLine());
-				//reader.reset();
+				//System.out.println("Recebendo...");
+				String s = reader.readLine();
+				if(s != null)
+					System.out.println(s);
 			}
 			
 		} catch (IOException e) {

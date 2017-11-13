@@ -15,7 +15,7 @@ public class Tanque implements Serializable{
 	protected transient double aux_x,aux_y;
 	protected double angulo;
 	protected double velocidade;
-	private Color cor;
+	protected Color cor;
 	private boolean estaAtivo;
 	protected int pontosVida;
 	
