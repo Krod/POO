@@ -32,6 +32,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
     private static Cliente cliente;
     private static Servidor servidor;
     private static String comando;
+    protected static int id;
 	
 	public Arena(int l,int a) throws IOException{
 		largura = l; 
@@ -46,6 +47,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 		setFocusable(true);
 		contador = new Timer(10,this);
 		contador.start();
+		id = 1;
 	}
 	public void adicionaTanque(Tanque t){
 		tanques.add(t);
@@ -125,6 +127,23 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 	public void actionPerformed(ActionEvent e){
 		for(Tanque t:tanques)
 			t.mover();
+		if(comando.equals("cliente")) {
+			try {
+				cliente.enviarDados();
+			} catch (IOException e2) {
+				e2.printStackTrace();
+			}
+		} else if(comando.equals("servidor")) {
+			try {
+				for(Jogador j: servidor.jogadores)
+					for(Tanque t:tanques)
+						if(t.id != j.t.id)
+							servidor.enviarDados(t, j.socketJogador);
+			} catch (IOException e3) {
+				e3.printStackTrace();
+			}
+		}
+		
 		repaint();
 	}
 	public void mouseMoved(MouseEvent e) {
@@ -156,12 +175,9 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 					break;
 				case KeyEvent.VK_SPACE: 
 					tanqueAtivo.disparar();
-					//atirar(t.getId());
-					//agora = System.currentTimeMillis();
 					break;
 				}
 			}
-			//repaint();
 	}
 	
 	@Override
@@ -180,7 +196,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 	}
 	
 	public static void main(String args[]) throws IOException{
-		Arena arena = new Arena(800,600);
+		Arena arena = new Arena(600,480);
 	    Random random = new Random();
 	    
 	    if(args.length > 0) {
@@ -189,18 +205,24 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 		    	System.out.println("Iniciando cliente");
 		    	cliente = new Cliente("127.0.0.1", 1234, "Rodrigo");
 		    	cliente.start();
+		    	arena.adicionaTanque(new Tanque(100,200,random.nextInt(360),Color.BLUE));
 		    }
 		    else if(comando.equals("servidor")) {
 		    	System.out.println("Iniciando servidor");
 		    	servidor = new Servidor(1234);
 		    	servidor.start();
+				arena.adicionaTanque(new Tanque(100,200,random.nextInt(360),Color.BLUE));
+				arena.adicionaTanque(new Tanque(200,200,random.nextInt(360),Color.RED));
+				arena.adicionaTanque(new Tanque(470,360,random.nextInt(360),Color.GREEN));
+				arena.adicionaTanque(new Tanque(450,50,random.nextInt(360),Color.YELLOW));
 		    }
+	    } else {
+			arena.adicionaTanque(new Tanque(100,200,random.nextInt(360),Color.BLUE));
+			arena.adicionaTanque(new Tanque(200,200,random.nextInt(360),Color.RED));
+			arena.adicionaTanque(new Tanque(470,360,random.nextInt(360),Color.GREEN));
+			arena.adicionaTanque(new Tanque(450,50,random.nextInt(360),Color.YELLOW));
 	    }
 	    
-		arena.adicionaTanque(new Tanque(100,200,random.nextInt(360),Color.BLUE));
-		arena.adicionaTanque(new Tanque(200,200,random.nextInt(360),Color.RED));
-		arena.adicionaTanque(new Tanque(470,360,random.nextInt(360),Color.GREEN));
-		arena.adicionaTanque(new Tanque(450,50,random.nextInt(360),Color.YELLOW));
 		JFrame janela = new JFrame("Tanques");
 		janela.getContentPane().add(arena);
 		janela.pack();

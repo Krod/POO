@@ -5,9 +5,8 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Tanque {
 	protected double x,y;
@@ -18,6 +17,7 @@ public class Tanque {
 	private boolean estaAtivo;
 	protected int pontosVida;
 	protected int pontosDisparos;
+	protected int id;
 	
 	private Random random;
 	protected  Disparo[] disparos;
@@ -34,6 +34,16 @@ public class Tanque {
 		pontosVida = 3;
 		disparos = new Disparo[3];
 		pontosDisparos = 3;
+		id = Arena.id++;
+	}
+	
+	public void copia(Tanque t) {
+		this.x = t.x;
+		this.y = t.y;
+		this.angulo = t.angulo;
+		this.velocidade = t.velocidade;
+		this.cor = t.cor;
+		this.disparos = t.disparos;
 	}
 	public void aumentarVelocidade(){
 		if(velocidade < 2)
