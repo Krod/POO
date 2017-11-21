@@ -9,19 +9,27 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Tanque {
-	protected double x,y;
-	protected double aux_x,aux_y;
-	protected double angulo;
-	protected double velocidade;
-	protected Color cor;
+	private double x,y;
+	private double aux_x,aux_y;
+	private double angulo;
+	private double velocidade;
+	private Color cor;
 	private boolean estaAtivo;
-	protected int pontosVida;
-	protected int pontosDisparos;
-	protected int id;
+	private int pontosVida;
+	private int maxPontosVida;
+	private int pontosDisparos;
+	private int maxPontosDisparos;
+	private int id;
+	private String mensagem;
+	private String nome;
 	
 	private Random random;
-	protected  Disparo[] disparos;
+	private  Disparo[] disparos;
 	private Disparo removerDisparo;
+	
+	public Tanque() {
+		
+	}
 	
 	public Tanque(int x, int y, int a, Color cor){
 		this.x = x;
@@ -35,8 +43,11 @@ public class Tanque {
 		disparos = new Disparo[3];
 		pontosDisparos = 3;
 		id = Arena.id++;
+		nome = "Rodrigo";
+		maxPontosDisparos = 3;
+		maxPontosVida = 3;
 	}
-	
+
 	public void copia(Tanque t) {
 		this.x = t.x;
 		this.y = t.y;
@@ -44,7 +55,10 @@ public class Tanque {
 		this.velocidade = t.velocidade;
 		this.cor = t.cor;
 		this.disparos = t.disparos;
+		this.pontosVida = t.pontosVida;
+		this.id = t.id;
 	}
+	
 	public void aumentarVelocidade(){
 		if(velocidade < 2)
 			velocidade+=0.2;
@@ -63,6 +77,7 @@ public class Tanque {
 		if(angulo < 0)
 			angulo = 360 - a;
 	}
+	
 	public void mover(){
 		aux_x = x + Math.sin(Math.toRadians(angulo)) * velocidade;
 		aux_y = y - Math.cos(Math.toRadians(angulo)) * velocidade;
@@ -134,7 +149,6 @@ public class Tanque {
 					pontosDisparos++;
 				}
 			}
-		//disparos.remove(removerDisparo);
 		
 		//Aplicamos o sistema de coordenadas.
 		g2d.transform(depois);
@@ -143,24 +157,18 @@ public class Tanque {
 		g2d.setColor(Color.BLACK);
 		g2d.fillRect(-15, -12, 30, 24);
 		
-		//g2d.setColor(Color.LIGHT_GRAY);
-		//g2d.setStroke(new BasicStroke(2));
-		//for(int i = -12+((int)x%2); i <= 8; i += 6)
-			//if(i >= -12 && i < 24)
-				//g2d.drawLine(-14, i, 14, i);
-		
 		//Desenhamos o corpo do tanque.
 		g2d.setColor(cor);
 		g2d.fillRect(-10, -12, 20, 24);
 		//Agora as esteiras
-		/*for(int i = -12; i <= 8; i += 4){
+		for(int i = -12; i <= 8; i += 4){
 			g2d.setColor(Color.LIGHT_GRAY);
 			g2d.fillRect(-15, i, 5, 4);
 			g2d.fillRect(10, i, 5, 4);
 			g2d.setColor(Color.BLACK);
 			g2d.fillRect(-15, i, 5, 4);
 			g2d.fillRect(10, i, 5, 4);
-		}*/
+		}
 		
 		//Desenha o canhão
 		g2d.setColor(Color.LIGHT_GRAY);
@@ -185,10 +193,10 @@ public class Tanque {
 		// Imprime na tela algumas informações para depuração
 		if(estaAtivo) {
 			int l = 10;
-			g2d.drawString("Angulo: " + (int)angulo + "", 25, l+=15);
+			//g2d.drawString("Angulo: " + (int)angulo + "", 25, l+=15);
 			g2d.drawString("Velocidade: " + String.format("%.1f", velocidade), 25, l+=15);
-			g2d.drawString("Posição X: " + String.format("%f", x), 25, l+=15);
-			g2d.drawString("Posição Y: " + String.format("%f", y), 25, l+=15);
+			//g2d.drawString("Posição X: " + String.format("%f", x), 25, l+=15);
+			//g2d.drawString("Posição Y: " + String.format("%f", y), 25, l+=15);
 			g2d.drawString("Disparos: " + pontosDisparos + "/3", 25, l+=15);
 			g2d.drawString("Pontos de Vida: " + pontosVida, 25, l+=15);
 		}
@@ -240,5 +248,128 @@ public class Tanque {
 				}
 			}
 		return false;
+	}
+	
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	public double getAngulo() {
+		return angulo;
+	}
+
+	public void setAngulo(double angulo) {
+		this.angulo = angulo;
+	}
+
+	public double getVelocidade() {
+		return velocidade;
+	}
+
+	public void setVelocidade(double velocidade) {
+		this.velocidade = velocidade;
+	}
+
+	public Color getCor() {
+		return cor;
+	}
+
+	public void setCor(Color cor) {
+		this.cor = cor;
+	}
+
+	public int getPontosDeVida() {
+		return pontosVida;
+	}
+
+	public void subtraiPontoDeVida() {
+		if(pontosVida > 0)
+			pontosVida--;
+	}
+
+	public void adicionaPontoDeDisparos() {
+		if(pontosDisparos < maxPontosDisparos)
+			pontosDisparos++;
+	}
+
+	public void subtraiPontoDeDisparos() {
+		if(pontosDisparos > 0)
+			pontosDisparos--;
+	}
+	
+	public int getPontosVida() {
+		return pontosVida;
+	}
+
+	public void setPontosDeVida(int pontosVida) {
+		this.pontosVida = pontosVida;
+	}
+
+	public int getMaxPontosVida() {
+		return maxPontosVida;
+	}
+
+	public void setMaxPontosVida(int maxPontosVida) {
+		this.maxPontosVida = maxPontosVida;
+	}
+
+	public int getPontosDeDisparos() {
+		return pontosDisparos;
+	}
+
+	public void setPontosDeDisparos(int pontosDisparos) {
+		this.pontosDisparos = pontosDisparos;
+	}
+
+	public int getMaxPontosDisparos() {
+		return maxPontosDisparos;
+	}
+
+	public void setMaxPontosDisparos(int maxPontosDisparos) {
+		this.maxPontosDisparos = maxPontosDisparos;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getMensagem() {
+		return mensagem;
+	}
+
+	public void setMensagem(String mensagem) {
+		this.mensagem = mensagem;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public Disparo[] getDisparos() {
+		return disparos;
+	}
+
+	public void setDisparos(Disparo[] disparos) {
+		this.disparos = disparos;
 	}
 }
